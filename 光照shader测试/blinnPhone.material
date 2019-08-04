@@ -1,0 +1,722 @@
+
+//¹âÕÕÄ£ÐÍ:  lambert phone blinn_phone
+//ÌùÍ¼£º D->diffuseMap N->normalMap S->specular A->AOÌùÍ¼ P->ÊÓ²îÌùÍ¼ R->½ÓÊÕÒõÓ°°æ
+//D DN  DNS DP DPS  | DR  DNR DNSR DPR DPSR
+//DNA DNSA DPA DPSA | DNAR DNSAR DPAR DPSAR
+
+
+vertex_program blinnPhone_D_1_VSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines VS_PROGRAM
+  default_params
+  {
+		param_named_auto modelMat world_matrix
+		param_named_auto it_worldMat inverse_transpose_world_matrix
+		param_named_auto worldViewProjMat worldviewproj_matrix
+  }
+}
+
+fragment_program blinnPhone_D_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+vertex_program blinnPhone_D_N_1_VSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines VS_PROGRAM,NORMAL_MAP
+  default_params
+  {
+		param_named_auto modelMat world_matrix
+		param_named_auto it_worldMat inverse_transpose_world_matrix
+		param_named_auto worldViewProjMat worldviewproj_matrix
+  }
+}
+fragment_program blinnPhone_D_N_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+   preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_MAP
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named_auto shiness SURFACE_SHININESS
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_N_S_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_MAP,SPECULAR_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named specularMap int 2
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_P_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_HEIGHTMAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalHeightMap int 1
+		param_named scaleBias float4 0.04 -0.02 1 0 
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_P_S_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_HEIGHTMAP,SPECULAR_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalHeightMap int 1
+		param_named specularMap int 2
+		param_named scaleBias float4 0.04 -0.02 1 0 
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_N_A_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_MAP,AO_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named aoMap int 2 
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_N_S_A_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_MAP,SPECULAR_MAP,AO_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named specularMap int 2
+		param_named aoMap int 3
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_P_A_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_HEIGHTMAP,AO_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalHeightMap int 1
+		param_named aoMap int 2
+		param_named scaleBias float4 0.04 -0.02 1 0
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program blinnPhone_D_P_S_A_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,NORMAL_HEIGHTMAP,SPECULAR_MAP,AO_MAP,BLINN_PHONE
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalHeightMap int 1
+		param_named specularMap int 2
+		param_named aoMap int 3
+		param_named scaleBias float4 0.04 -0.02 1 0
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named_auto shiness SURFACE_SHININESS
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+//vertex_program blinnPhone_D_1_VSglsl
+fragment_program lambert_D_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,LAMBERT
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program lambert_D_N_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,LAMBERT,NORMAL_MAP
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+//vertex_program blinnPhone_D_N_1_VSglsl
+fragment_program lambert_D_N_A_1_FSglsl glsl
+{
+  source blinnPhone_vs_fs_150.glsl
+  preprocessor_defines MAX_LIGHT_COUNT=1,LAMBERT,NORMAL_MAP,AO_MAP
+  default_params
+  {
+	 	param_named_auto AmbientColor ambient_light_colour
+		param_named_auto cameraPos camera_position
+		param_named_auto minAlpha SURFACE_ALPHA_REJECTION_VALUE
+		param_named diffuseMap int 0
+		param_named normalMap int 1
+		param_named aoMap int 2
+		param_named_auto ambientMat SURFACE_AMBIENT_COLOUR
+		param_named_auto diffuseMat SURFACE_DIFFUSE_COLOUR
+		param_named_auto specularMat SURFACE_SPECULAR_COLOUR
+		param_named_auto emissiveMat SURFACE_EMISSIVE_COLOUR
+		param_named light_count int 1
+		param_named light_type_array[0] int 1
+		param_named light_diffuse_array[0] float4 1.0 1.0 1.0 1.0
+		param_named light_power_array[0] float 1.0
+		param_named light_direction_array[0] float3 -1.0 -1.0 -1.0 
+		param_named light_position_array[0] float3 0.0 100.0 0.0 
+		param_named light_attenuation_array[0] float4 1.0 0.0 0.0 1.0
+		param_named spotlight_params_array[0] float 0.5
+		param_named light_cast_shadow_array[0] int 0
+  }
+}
+
+
+material 056cf6da.dds
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref blinnPhone_DS_1_VSglsl
+			{
+			}
+			fragment_program_ref blinnPhone_DS_1_FSglsl
+      {        
+      }
+		
+
+			texture_unit
+			{
+				texture 056cf6da.dds
+			}
+
+		}
+
+	}
+
+}
+
+material box
+{
+	technique
+	{
+		pass 
+		{
+			specular 0.929412 0.921569 0.921569 1 2
+
+			vertex_program_ref blinnPhone_D_N_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_N_S_A_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture floor_diffuse.png
+			}
+
+			texture_unit
+			{
+				texture floor_bump.png
+			}
+
+			texture_unit
+			{
+				texture floor_specular.png
+			}
+
+			texture_unit
+			{
+				texture floor_ao.png
+			}
+		}
+	}
+}
+
+material plane
+{
+	technique
+	{
+		pass 
+		{
+			specular 0.929412 0.921569 0.921569 1 2
+
+			vertex_program_ref blinnPhone_D_N_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_P_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture rock_diff.bmp
+			}
+
+			texture_unit
+			{
+				texture rock_norm.bmp
+			}
+		}
+	}
+}
+
+
+material "meiren_Material #26"
+{
+	technique
+	{
+		pass 
+		{
+			diffuse 0.52549 0.509804 0.509804 1
+			specular 0.364706 0.364706 0.364706 1 1
+
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture meiren_Female_Yz_62_D.png
+			}
+		}
+
+	}
+
+}
+
+material "pangxie_01 - Default"
+{
+	technique
+	{
+		pass
+		{
+			diffuse 0.52549 0.509804 0.509804 1
+			specular 0.364706 0.364706 0.364706 1 1
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+			texture_unit
+			{
+				texture "pangxie_A059a.tga"
+				tex_coord_set 0
+			}
+		}
+	}
+}
+
+
+
+material "mm_Material #25"
+{
+	technique
+	{
+		pass 
+		{
+			specular 0.737255 0.713726 0.713726 1 11
+			emissive 0.705882 0.662745 0.662745 1
+
+			vertex_program_ref blinnPhone_D_N_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_N_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture M29401A.dds
+			}
+
+			texture_unit
+			{
+				texture M29401A_n.dds
+				tex_coord_set 1
+			}
+		}
+
+	}
+
+}
+
+material "mm_Material #26"
+{
+	technique
+	{
+		pass 
+		{
+			specular 0.627451 0.627451 0.627451 1 11
+			alpha_rejection greater 128
+
+			vertex_program_ref blinnPhone_D_N_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_N_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture M29401.dds
+			}
+
+			texture_unit
+			{
+				texture M29401_n.dds
+				tex_coord_set 1
+			}
+		}
+
+	}
+
+}
+
+
+material f_Êé_·ðÉ½_ËÉÊ÷021
+{
+	technique
+	{
+		pass 
+		{
+			specular 0.627451 0.627451 0.627451 1 11
+
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture f_Êé_Ê÷Ä¾02.dds 8
+			}
+		}
+
+	}
+
+}
+
+material f_Êé_·ðÉ½_ËÉÊ÷022
+{
+	technique
+	{
+		pass 
+		{
+			ambient 0.580392 0.572549 0.572549 1
+			specular 0.52549 0.52549 0.52549 1 11
+			emissive 1 0 0.0117647 1
+			alpha_rejection greater 128
+
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture f_Êé_ËÉÊ÷02.dds 8
+			}
+		}
+
+	}
+
+}
+
+
+
+material "e_ºì¹ûÊ÷1_01"
+{
+	technique
+	{
+		pass 
+		{
+			ambient 0.584314 0.572549 0.572549 1
+			specular 0.627451 0.627451 0.627451 1 11
+
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture "e_ºì¹ûÊ÷2.dds"
+			}
+		}
+
+	}
+
+	
+}
+material "e_ºì¹ûÊ÷1_02"
+{
+technique
+	{
+		pass 
+		{
+			ambient 0.309804 0.305882 0.305882 1
+			specular 0.596078 0.584314 0.584314 1 7
+			alpha_rejection greater 128
+			cull_hardware none
+
+			vertex_program_ref blinnPhone_D_1_VSglsl
+			{
+			}
+
+			fragment_program_ref blinnPhone_D_1_FSglsl
+			{
+			}
+
+			texture_unit
+			{
+				texture "e_ºì¹ûÊ÷1.dds"
+			}
+		}
+
+	}
+}
+
+
+
+
+
+

@@ -1,0 +1,78 @@
+
+
+vertex_program lambert_diffuse_map_VSglsl glsl
+{
+  source lambert_vs_fs_150.glsl
+  preprocessor_defines VS_PROGRAM
+  default_params
+  {
+		param_named_auto modelMat world_matrix
+		param_named_auto it_worldMat inverse_transpose_world_matrix
+		param_named_auto worldViewProjMat worldviewproj_matrix
+  }
+}
+
+
+
+fragment_program lambert_diffuse_map_FSglsl glsl
+{
+  source lambert_vs_fs_150.glsl
+
+  default_params
+  {
+        param_named_auto cameraPos camera_position
+		param_named_auto vireDir view_direction 
+		param_named_auto AmbientColor ambient_light_colour
+		param_named diffuseMap int 0
+        param_named blinn bool true
+  }
+  
+}
+
+material plane1
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref lambert_diffuse_map_VSglsl
+			{
+			}
+			fragment_program_ref lambert_diffuse_map_FSglsl
+            {        
+            }
+		
+			texture_unit
+			{
+				texture Rocks_Diffuse.tga
+			}
+		}
+	}
+}
+
+material "meiren_Material #26"
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref lambert_diffuse_map_VSglsl
+			{
+			}
+			fragment_program_ref lambert_diffuse_map_FSglsl
+            {        
+            }
+
+			texture_unit
+			{
+				texture "meiren_Female_Yz_62_D.png"
+				tex_coord_set 0
+				colour_op modulate
+				scale 1 1
+				scroll 0 0
+				rotate 0
+			}
+		}
+	}
+}
+

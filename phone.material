@@ -1,0 +1,102 @@
+
+
+
+vertex_program phone_VSglsl glsl
+{
+  source phone_vs_fs_150.glsl
+  preprocessor_defines VS_PROGRAM
+  default_params
+  {
+		param_named_auto worldMat world_matrix
+		param_named_auto viewprojMat viewproj_matrix
+		param_named_auto normalMatrix inverse_transpose_world_matrix 
+		//param_named_auto normalMatrix inverse_transpose_projection_matrix				
+  }
+}
+
+
+
+fragment_program phone_FSglsl glsl
+{
+  source phone_vs_fs_150.glsl
+  default_params
+  {
+		param_named_auto light_pos light_position 0
+  		param_named ambientMat float4 0.8 0.8 0.8 1.0
+		param_named diffuseMat float4 0.8 0.8 0.8 1.0
+		param_named specMat float4 0.8 0.8 0.8 1.0
+		param_named specPow float 32.0
+		
+		param_named diffuseMap int 0
+		
+  }
+  
+}
+material "meiren_Material #261"
+{
+	technique
+	{
+		pass 
+		{
+			diffuse 0.52549 0.509804 0.509804 1
+			specular 0.364706 0.364706 0.364706 1 1
+
+			vertex_program_ref phone_VSglsl
+			{
+			}
+			fragment_program_ref phone_FSglsl
+            {        
+            }
+
+			texture_unit
+			{
+				texture meiren_Female_Yz_62_D.png
+			}
+		}
+
+	}
+
+}
+
+//µØÃæ
+material Examples/Rockwall
+{
+	technique
+	{
+		pass
+		{
+			vertex_program_ref phone_VSglsl
+			{
+			}
+			fragment_program_ref phone_FSglsl
+            {        
+            }
+		
+			texture_unit
+			{
+				texture rockwall.tga
+			}
+		}
+	}
+}
+
+//Ìì¿Õ
+material Examples/CloudySky
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				texture clouds.jpg
+				scroll_anim 0.15 0
+			}
+		}
+	}
+}
+
+
