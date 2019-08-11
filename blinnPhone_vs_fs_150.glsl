@@ -19,6 +19,15 @@ uniform mat4 modelMat;
 uniform mat4 it_worldMat;
 uniform mat4 worldViewProjMat;
 
+#ifdef RECEIVE_SHADOW_PSSM
+uniform mat4 texWVPMat0;
+uniform mat4 texWVPMat1;
+out vec4 oLightPosition0;
+out vec4 oLightPosition1;
+out float zPosition;
+#endif
+
+
 void main()
 {
     fragPos = vec3(modelMat * position);
@@ -35,6 +44,13 @@ void main()
 #endif
 
 	gl_Position = worldViewProjMat * position;
+	
+#ifdef RECEIVE_SHADOW_PSSM
+	zPosition = gl_Position.z;
+	oLightPosition0 = texWVPMat0 * position;
+	oLightPosition1 = texWVPMat1 * position;
+#endif
+	
 }
 
 #else
@@ -106,14 +122,40 @@ uniform sampler2D aoMap;
 
 uniform vec3 cameraPos;
 
+
 in vec3 fragPos;
 in vec3 oNormal;
+
+#ifdef RECEIVE_SHADOW_PSSM
+in vec4 oLightPosition0;
+in vec4 oLightPosition1;
+in float zPosition;
+uniform sampler2D shadowMap0;
+uniform sampler2D shadowMap1;
+uniform vec4 invShadowMapSize0;
+uniform vec4 invShadowMapSize1;
+uniform vec4 pssmSplitPoints;
+
+float shadowPCF(sampler2D shadowMap, vec4 shadowMapPos, vec2 offset)
+{
+	shadowMapPos = shadowMapPos / shadowMapPos.w;
+	vec2 uv = shadowMapPos.xy;
+	vec3 o = vec3(offset, -offset.x) * 0.3f;
+
+	float c =	(shadowMapPos.z <= texture(shadowMap, uv.xy - o.xy).r) ? 1 : 0; // top left
+	c +=		(shadowMapPos.z <= texture(shadowMap, uv.xy + o.xy).r) ? 1 : 0; // bottom right
+	c +=		(shadowMapPos.z <= texture(shadowMap, uv.xy + o.zy).r) ? 1 : 0; // bottom left
+	c +=		(shadowMapPos.z <= texture(shadowMap, uv.xy - o.zy).r) ? 1 : 0; // top right
+	return c / 4;
+}
+
+#endif
+
 
 vec3 expand(vec3 v)
 {
 	return (v - 0.5) * 2.0;
 }
-
 
 
 out vec4 FragColor;
@@ -279,6 +321,41 @@ void main()
             }
         }
      }
+	 
+#ifdef RECEIVE_SHADOW_PSSM
+	float shadowing = 1.0f;
+	//float4 splitColour;
+	if (zPosition <= pssmSplitPoints.y)
+	{
+		//splitColour = float4(0.5, 0, 0, 1);
+		shadowing = shadowPCF(shadowMap0, oLightPosition0, invShadowMapSize0.xy);
+	}
+	else if (zPosition <= pssmSplitPoints.z)
+	{
+		//splitColour = float4(0, 0.5, 0, 1);
+		shadowing = shadowPCF(shadowMap1, oLightPosition1, invShadowMapSize1.xy);	
+	}
+	if(shadowing < 0.25)
+	{
+		shadowing = 0.0;
+	}
+	else
+	{
+		shadowing = 1.0;
+	}
+
+    result = result * shadowing;
+#endif
+
+//#ifdef FOG_LINEAR
+	////float fog = ( fogParams.z - eyeDistance ) * fogParams.w; // / ( fogParams.z - fogParams.y );
+	//float fog = ( 100 - uv.z ) * 0.01;
+	//float4 fogColor;
+	//fogColor.r = 0.8; fogColor.g = 0.8; fogColor.b = 1.0;
+	//oColour.rgb += fogColor.rgb * (1.0 - fog);
+//#endif
+	
+	 
 	//FragColor = vec4(1.0,0.0,0.0, 1.0);
 	FragColor = vec4(result, diffuseColor.a);
     if (light_count == 0) { FragColor = emissiveMat * diffuseColor; }
